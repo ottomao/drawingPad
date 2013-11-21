@@ -1,9 +1,15 @@
+/*
+combined files : 
+
+gallery/drawingPad/1.0/index
+
+*/
 /**
  * @fileoverview 
  * @author 加里<xiaofeng.mxf@taobao.com>
  * @module drawingPad
  **/
-KISSY.add(function (S, Node,Dom,Base) {
+KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
     //<script src="./flashcanvas.js"></script>
     var CLASS_INTERACT = "_drawingPad_interact";
 
@@ -459,6 +465,7 @@ KISSY.add(function (S, Node,Dom,Base) {
 
     // }});
 }, {requires:['node','dom', 'base']});
+
 
 
 
