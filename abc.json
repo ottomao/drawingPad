@@ -1,0 +1,14 @@
+{
+    "name": "drawingPad",
+    "version": "1.0",
+    "desc": "",
+    "cover": "",
+    "tag":"canvas,html5,绘图",
+    "author": {
+        "name": "加里",
+        "email": "xiaofeng.mxf@taobao.com",
+        "page": ""
+    },
+    "type": "kissy-gallery",
+    "type-url": "http://gallery.kissyui.com/guide"
+}
