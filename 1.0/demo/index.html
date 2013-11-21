@@ -5,9 +5,54 @@
     <title>drawingPad的demo</title>
     <script src="http://g.tbcdn.cn/kissy/k/1.3.0/kissy-min.js" charset="utf-8"></script>
     <link rel="stylesheet" href="http://g.tbcdn.cn/kissy/k/1.3.0/css/dpl/base-min.css">
+    <link rel="stylesheet" type="text/css" href="./demo.css">
 </head>
 <body>
 <h2>drawingPad的demo</h2>
+
+<div class="container">
+    <div class="left">
+        <div class="canvasWrapper"> </div>
+    </div>
+
+    <div class="right">
+        <h4>图层管理</h4>
+        <table>
+            <tr>
+                <td class="thumbImg"><img src="./frame.png" /></td>
+                <td class="action act-active"><a class="frameAct" href="#">激活</a></td>
+                <td class="action act-cancel"><a class="frameCancel" href="#">取消</a></td>
+            </tr>
+
+            <tr>
+                <td class="thumbImg"><img src="./dog.jpg" /></td>
+                <td class="action act-active"><a class="item1Act" href="#">激活</a></td>
+                <td class="action act-cancel"><a class="item1Cancel" href="#">取消</a></td>
+            </tr>
+
+            <tr>
+                <td class="thumbImg"><img src="./item2.png" /></td>
+                <td class="action act-active"><a class="item2Act" href="#">激活</a></td>
+                <td class="action act-cancel"><a class="item2Cancel" href="#">取消</a></td>
+            </tr>
+
+            <tr>
+                <td class="thumbImg"></td>
+                <td class="action act-active"><a class="all_cancel" href="#">退出交互</a></td>
+                <td class="action act-cancel"><a class="getData" href="#">获取数据</a></td>
+            </tr>
+        </table>
+    </div>
+    <div style="clear:both"> </div>
+</div>
+
+<hr>
+<h3>素材</h3>
+<div class="srcWrapper">
+    <img id="frame"  src="./frame.png" />
+    <img id="item1"  src="./dog.jpg" />
+    <img id="item2"  src="./item2.png" />
+</div>
 
 <script>
     var S = KISSY;
@@ -25,8 +70,77 @@
         });
     }
 
-    S.use('gallery/drawingPad/1.0/index', function (S, DrawingPad) {
-          new DrawingPad();
+    S.use('gallery/drawingPad/1.0/index,node', function (S, DrawingPad ,Node) {
+          S.ready(function(){
+              var drawingPad = new DrawingPad({
+                  height  :430,
+                  width   :700,
+                  wrapper :S.get(".canvasWrapper")
+              });
+
+              var frameEl = document.getElementById("frame");
+              var itemEl1 = document.getElementById("item1");
+              var itemEl2 = document.getElementById("item2");
+
+              var itemLayer = drawingPad.addLayer({
+                  img     : itemEl1,
+                  centerX : 200,
+                  centerY : 200,
+                  rotate  : 10,
+                  scale   : 1,
+                  class   :"myOwnClass"
+              }).render();
+
+              var frameLayer = drawingPad.addLayer({
+                  img   : frameEl
+              }).render();
+
+              var itemLayer2 = drawingPad.addLayer({
+                  img : itemEl2
+              }).render();
+
+              Node.one(".item1Act").on("click",function(){
+                  itemLayer.activeInteract();
+              });
+
+              Node.one(".item1Cancel").on("click",function(){
+                  itemLayer.deactiveInteract();
+              });
+
+              Node.one(".item2Act").on("click",function(){
+                  itemLayer2.activeInteract();
+              });
+
+              Node.one(".item2Cancel").on("click",function(){
+                  itemLayer2.deactiveInteract();
+              });
+
+              Node.one(".frameAct").on("click",function(){
+                  frameLayer.activeInteract();
+              });
+
+              Node.one(".frameCancel").on("click",function(){
+                  frameLayer.deactiveInteract();
+              });
+
+
+              //退出交互模式
+              Node.one(".all_cancel").on("click",function(){
+                  drawingPad.deactiveInteract();
+              });
+
+              //获取合并后的数据，并在新窗口中打开预览
+              Node.one(".getData").on("click",function(){
+                  var data = drawingPad.getMergedData();
+                  window.open(data,"_blank");
+              });
+
+              // forDebug
+              window.drawingPad = drawingPad;
+              window.itemLayer  = itemLayer;
+              window.frameLayer = frameLayer;
+          });
+
     })
 </script>
 </body>
