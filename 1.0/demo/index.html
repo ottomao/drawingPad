@@ -72,75 +72,75 @@
     }
 
     S.use('gallery/drawingPad/1.0/index,node', function (S, DrawingPad ,Node) {
-          S.ready(function(){
-              var drawingPad = new DrawingPad({
-                  height  :430,
-                  width   :700,
-                  wrapper :S.get(".canvasWrapper")
-              });
+        S.ready(function(){
+            var drawingPad = new DrawingPad({
+                height  :430,
+                width   :700,
+                wrapper :S.get(".canvasWrapper")
+            });
 
-              var frameEl = document.getElementById("frame");
-              var itemEl1 = document.getElementById("item1");
-              var itemEl2 = document.getElementById("item2");
+            var frameEl = document.getElementById("frame");
+            var itemEl1 = document.getElementById("item1");
+            var itemEl2 = document.getElementById("item2");
 
-              var itemLayer = drawingPad.addLayer({
-                  img     : itemEl1,
-                  centerX : 200,
-                  centerY : 200,
-                  rotate  : 10,
-                  scale   : 1,
-                  class   :"myOwnClass"
-              }).render();
+            var itemLayer = drawingPad.addLayer({
+                img     : itemEl1,
+                centerX : 200,
+                centerY : 200,
+                rotate  : 10,
+                scale   : 1,
+                class   :"myOwnClass"
+            }).render();
 
-              var frameLayer = drawingPad.addLayer({
-                  img   : frameEl
-              }).render();
+            var frameLayer = drawingPad.addLayer({
+                img   : frameEl
+            }).render();
 
-              var itemLayer2 = drawingPad.addLayer({
-                  img : itemEl2
-              }).render();
+            var itemLayer2 = drawingPad.addLayer({
+                img : itemEl2
+            }).render();
 
-              Node.one(".item1Act").on("click",function(){
-                  itemLayer.activeInteract();
-              });
+            Node.one(".item1Act").on("click",function(){
+                itemLayer.activeInteract();
+            });
 
-              Node.one(".item1Cancel").on("click",function(){
-                  itemLayer.deactiveInteract();
-              });
+            Node.one(".item1Cancel").on("click",function(){
+                itemLayer.deactiveInteract();
+            });
 
-              Node.one(".item2Act").on("click",function(){
-                  itemLayer2.activeInteract();
-              });
+            Node.one(".item2Act").on("click",function(){
+                itemLayer2.activeInteract();
+            });
 
-              Node.one(".item2Cancel").on("click",function(){
-                  itemLayer2.deactiveInteract();
-              });
+            Node.one(".item2Cancel").on("click",function(){
+                itemLayer2.deactiveInteract();
+            });
 
-              Node.one(".frameAct").on("click",function(){
-                  frameLayer.activeInteract();
-              });
+            Node.one(".frameAct").on("click",function(){
+                frameLayer.activeInteract();
+            });
 
-              Node.one(".frameCancel").on("click",function(){
-                  frameLayer.deactiveInteract();
-              });
+            Node.one(".frameCancel").on("click",function(){
+                frameLayer.deactiveInteract();
+            });
 
 
-              //退出交互模式
-              Node.one(".all_cancel").on("click",function(){
-                  drawingPad.deactiveInteract();
-              });
+            //退出交互模式
+            Node.one(".all_cancel").on("click",function(){
+                drawingPad.deactiveInteract();
+            });
 
-              //获取合并后的数据，并在新窗口中打开预览
-              Node.one(".getData").on("click",function(){
-                  var data = drawingPad.getMergedData();
-                  window.open(data,"_blank");
-              });
+            //获取合并后的数据，并在新窗口中打开预览
+            Node.one(".getData").on("click",function(){
+                var data = drawingPad.getMergedData();
+                window.open(data,"_blank");
+            });
 
-              // forDebug
-              window.drawingPad = drawingPad;
-              window.itemLayer  = itemLayer;
-              window.frameLayer = frameLayer;
-          });
+            // forDebug
+            window.drawingPad = drawingPad;
+            window.itemLayer  = itemLayer;
+            window.frameLayer = frameLayer;
+        });
 
     })
 </script>

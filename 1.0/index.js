@@ -13,114 +13,203 @@ KISSY.add(function (S, Node,Dom,Base) {
      */
     function Layer(config){
         //append canvas
+        var _self = this;
+
+        _self.addAttrs({
+            img: {           //不允许触发修改
+                setter: function(v) {
+                    return v;
+                },
+                getter: function(v) {
+                    return v;
+                }
+            },
+            centerX:{
+                value:null,
+                setter: function(v) {
+                    return v;
+                },
+                getter: function(v) {
+                    return v;
+                }
+            },
+            centerY:{
+                value:null,
+                setter: function(v) {
+                    return v;
+                },
+                getter: function(v) {
+                    return v;
+                }
+            },
+            rotate:{
+                value:0,
+                setter: function(v) {
+                    return v;
+                },
+                getter: function(v) {
+                    return v;
+                }
+            },
+            scale:{
+                value:1,
+                setter: function(v) {
+                    return v;
+                },
+                getter: function(v) {
+                    return v;
+                }
+            },
+            class:{
+                value:null,
+                setter: function(v) {
+                    return v;
+                },
+                getter: function(v) {
+                    return v;
+                }
+            }
+        });
+        Layer.superclass.constructor.call(_self,config);
+
         var itemTpl    = Node('<div class="_drawingPad_canvasLayer"><canvas></canvas><div>')
                         .css("position","absolute")
                         .css("top","0px")
                         .css("left","0px"),
-            canvasNode = itemTpl.one("canvas"), 
-            interLayer = config.wrapper.one("." + CLASS_INTERACT);
+            canvasNode    = itemTpl.one("canvas"),
+            canvasWrapper = Node(config.wrapper),
+            interLayer    = canvasWrapper.one("." + CLASS_INTERACT);
 
             itemTpl.one("canvas").css("background","none");
 
         if(interLayer){  //存在交互层，则始终保持交互层在最上方
             interLayer.before(itemTpl)
         }else{
-            config.wrapper.append(itemTpl); 
+            canvasWrapper.append(itemTpl); 
         }
+        //添加用户自定义样式
+        config.class && itemTpl.addClass(config.class);
 
         //set layer attr
-        this.fatherPad    = config.father;
-        this.canvasEl     = canvasNode.getDOMNode();
-        this.canvasCtx    = this.canvasEl.getContext("2d");
-        this.scaleRate    = config.scale  || 1;
-        this.rotateDeg    = config.rotate || 0;
-        
-        this.img          = config.img;
-        if(this.img){
-            this.imgWidth  = config.img.width;
-            this.imgHeight = config.img.height;
+        _self.fatherPad    = config.father;
+        _self.canvasEl     = canvasNode.getDOMNode();
+        _self.canvasCtx    = _self.canvasEl.getContext("2d");
+
+        _self.img          = config.img;
+        if(_self.img){
+            _self.imgWidth  = config.img.width;
+            _self.imgHeight = config.img.height;
         }else{
-            this.imgWidth  = this.fatherPad.width;
-            this.imgHeight = this.fatherPad.height;
+            _self.imgWidth  = _self.fatherPad.width;
+            _self.imgHeight = _self.fatherPad.height;
         }
-        this.cordX = config.centerX || 0.5 * this.imgWidth; 
-        this.cordY = config.centerY || 0.5 * this.imgHeight;
+        _self.cordX = S.isNumber(_self.get("centerX"))?  _self.get("centerX") : 0.5 * _self.imgWidth; 
+        _self.cordY = S.isNumber(_self.get("centerY"))?  _self.get("centerY") : 0.5 * _self.imgHeight; 
         
         //set canvas prop
-        this.canvasEl.width  = config.width;
-        this.canvasEl.height = config.height;
-        if(config.class){
-            itemTpl.addClass(config.class);
-        }
+        _self.canvasEl.width  = config.width;
+        _self.canvasEl.height = config.height;
     }
 
-    S.augment(Layer,{
-        render : function(){
-            var _self     = this,
-                ctx       = this.canvasCtx,
-                img       = this.img,
-                scaleRate = this.scaleRate,
-                rotateDeg = this.rotateDeg;
+    S.extend(Layer,Base,{
+            render : function(){
+                var _self     = this,
+                    ctx       = _self.canvasCtx,
+                    img       = _self.img,
+                    scaleRate = _self.get("scale"),
+                    rotateDeg = _self.get("rotate");
 
-            ctx.setTransform(1,0,0,1,0,0);  
-            ctx.clearRect(0,0, _self.canvasEl.width , _self.canvasEl.height); 
+                ctx.setTransform(1,0,0,1,0,0);  
+                ctx.clearRect(0,0, _self.canvasEl.width , _self.canvasEl.height); 
 
-            //usage : context.setTransform(scaleX, skewX, skewY, scaleY, translateX, translateY);
-            ctx.setTransform(1,0,0,1,_self.cordX,_self.cordY);   //reset transform
-            ctx.rotate( rotateDeg * Math.PI/180);
+                //usage : context.setTransform(scaleX, skewX, skewY, scaleY, translateX, translateY);
+                ctx.setTransform(1,0,0,1,_self.cordX,_self.cordY);   //reset transform
+                ctx.rotate( rotateDeg * Math.PI/180);
 
-            if (typeof FlashCanvas != "undefined"){
-                ctx.loadImage(img, function(){
-                    // ctx.globalAlpha = 0.5; //TODO : 开放alpha接口
-                    // ctx.drawImage(img , x ,y);     //TODO  : ie8下连续多次drawImage出错 
-                    // ctx.fillRect(-0.5 * _self.imgWidth , -0.5 * _self.imgHeight , _self.imgWidth , _self.imgHeight);
+                if (typeof FlashCanvas != "undefined"){
+                    ctx.loadImage(img, function(){
+                        // ctx.globalAlpha = 0.5; //TODO : 开放alpha接口
+                        // ctx.drawImage(img , x ,y);     //TODO  : ie8下连续多次drawImage出错 
+                        // ctx.fillRect(-0.5 * _self.imgWidth , -0.5 * _self.imgHeight , _self.imgWidth , _self.imgHeight);
+                        ctx.drawImage(img,0                                , 0                                 , _self.imgWidth            , _self.imgHeight,
+                                          -0.5 * _self.imgWidth * scaleRate, -0.5 * _self.imgHeight * scaleRate, _self.imgWidth * scaleRate, _self.imgHeight * scaleRate); 
+                        // _self.left = x;
+                        // _self.top  = y;
+
+                    });
+                }else{
+                    // ctx.globalAlpha = 0.5;
+                    // ctx.fillRect(-2,-2,4,4);
                     ctx.drawImage(img,0                                , 0                                 , _self.imgWidth            , _self.imgHeight,
-                                      -0.5 * _self.imgWidth * scaleRate, -0.5 * _self.imgHeight * scaleRate, _self.imgWidth * scaleRate, _self.imgHeight * scaleRate); 
+                                      -0.5 * _self.imgWidth * scaleRate, -0.5 * _self.imgHeight * scaleRate, _self.imgWidth * scaleRate, _self.imgHeight * scaleRate);
                     // _self.left = x;
                     // _self.top  = y;
+                }
 
-                });
-            }else{
-                // ctx.globalAlpha = 0.5;
-                // ctx.fillRect(-2,-2,4,4);
-                ctx.drawImage(img,0                                , 0                                 , _self.imgWidth            , _self.imgHeight,
-                                  -0.5 * _self.imgWidth * scaleRate, -0.5 * _self.imgHeight * scaleRate, _self.imgWidth * scaleRate, _self.imgHeight * scaleRate);
-                // _self.left = x;
-                // _self.top  = y;
-            }
-
-            return _self;
-        },
-        //switch active layer
-        activeInteract:function(){
-            this.fatherPad.interactDoingLayer = this;
-            this.fatherPad._updateController();
-        },
-        //deactive
-        deactiveInteract:function(){
-            if(this.fatherPad.interactDoingLayer == this){
-                this.fatherPad.interactDoingLayer = null;
-                this.fatherPad._updateController();   
+                return _self;
+            },
+            //switch active layer
+            activeInteract:function(){
+                this.fatherPad.interactDoingLayer = this;
+                this.fatherPad._updateController();
+            },
+            //deactive
+            deactiveInteract:function(){
+                if(this.fatherPad.interactDoingLayer == this){
+                    this.fatherPad.interactDoingLayer = null;
+                    this.fatherPad._updateController();   
+                }
             }
         }
-    });
+    );
 
     function DrawingPad(config){
         if (!config.height || !config.width || !config.wrapper ) return;
 
         //init
         var _self = this;
-        _self.height        = config.height;
-        _self.width         = config.width;
-        _self.wrapper       = Node(config.wrapper);
+        _self.addAttrs({
+            height: {
+                value: 0,
+                setter: function(v) {
+                    return v;
+                },
+                getter: function(v) {
+                    return v;
+                }
+            },
+            width:{
+                value: 0,
+                setter: function(v) {
+                    return v;
+                },
+                getter: function(v) {
+                    return v;
+                }
+            },
+            wrapper:{
+                value: null,
+                setter: function(v) {
+                    return v;
+                },
+                getter: function(v) {
+                    return v;
+                }
+            }
+        });
+
+        DrawingPad.superclass.constructor.call(_self, config);
+        // _self.height        = config.height;
+        // _self.width         = config.width;
+        // _self.wrapper       = Node(config.wrapper);
         _self.layers        = [];
         _self.interactDoingLayer   = null;
         _self.interactCaptureLayer = null; 
 
-        _self.wrapper.empty()
-                     .css("position","relative")
-                     .css("height",_self.height + "px")
-                     .css("width",_self.width + "px");
+        Node(_self.get("wrapper")).empty()
+                            .css("position","relative")
+                            .css("height",_self.get("height") + "px")
+                            .css("width",_self.get("width") + "px");
 
 
         //添加交互捕获层和相应事件
@@ -141,12 +230,12 @@ KISSY.add(function (S, Node,Dom,Base) {
             // |  |
             // 4--3
             var ret = { position:null,info:null },
-                scaleRate = interactDoingLayer.scaleRate,
+                scaleRate = interactDoingLayer.get("scale"),
                 objLeft   = interactDoingLayer.cordX - 0.5 * interactDoingLayer.imgWidth  * scaleRate,
                 objRight  = interactDoingLayer.cordX + 0.5 * interactDoingLayer.imgWidth  * scaleRate,
                 objTop    = interactDoingLayer.cordY - 0.5 * interactDoingLayer.imgHeight * scaleRate,
                 objBottom = interactDoingLayer.cordY + 0.5 * interactDoingLayer.imgHeight * scaleRate,
-                rotation  = interactDoingLayer.rotateDeg,
+                rotation  = interactDoingLayer.get("rotate"),
                 resDeg    = 0 - rotation * Math.PI / 180,   
                 canvasCordX_before = mouseX - interactDoingLayer.cordX,
                 canvasCordY_before = mouseY - interactDoingLayer.cordY,
@@ -299,7 +388,7 @@ KISSY.add(function (S, Node,Dom,Base) {
                 scaleRateY = Math.abs( mouseShadow[1] / (layerHeight * 0.5) );
                 scaleRate  = Math.min(scaleRateX , scaleRateY);
 
-                interactDoingLayer.scaleRate = scaleRate;
+                interactDoingLayer.set("scaleRate", scaleRate );
                 interactDoingLayer.render();
 
                 _self._updateController();
@@ -320,7 +409,7 @@ KISSY.add(function (S, Node,Dom,Base) {
                     angle = Math.atan( relativeX /  relativeY) * 180 / Math.PI + 180;
                 }
 
-                interactDoingLayer.rotateDeg = angle;
+                interactDoingLayer.set("rotateDeg",angle);
                 interactDoingLayer.render();
 
                 _self._updateController();
@@ -335,129 +424,120 @@ KISSY.add(function (S, Node,Dom,Base) {
 
     }
 
-    S.augment(DrawingPad,{
-        addLayer:function(config){
-            var newLayer = new Layer(
-                S.mix(config,{
-                    father  : this,
-                    height  : this.height,
-                    width   : this.width,
-                    wrapper : this.wrapper
-                })
-            );
+    S.extend(DrawingPad, Base,{
+            addLayer:function(config){
+                var newLayer = new Layer(
+                    S.mix(config,{
+                        father  : this,
+                        height  : this.get("height"),
+                        width   : this.get("width"),
+                        wrapper : this.get("wrapper")
+                    })
+                );
 
-            this.layers.push(newLayer);
-            return newLayer;
-        },
-        deactiveInteract:function(){
-            this.interactDoingLayer = null;
-            this._updateController();
-        },
-        _clearCapture:function(){
-            var interactCaptureCtx = this.interactCaptureLayer.canvasCtx;
-            interactCaptureCtx.setTransform(1,0,0,1,0,0);
-            interactCaptureCtx.clearRect(0,0 , this.width , this.height); 
-        },
-        _updateController:function(){
-            //draw controller frame
-            var _self              = this,
-                interactCaptureCtx = _self.interactCaptureLayer.canvasCtx;
+                this.layers.push(newLayer);
+                return newLayer;
+            },
+            deactiveInteract:function(){
+                this.interactDoingLayer = null;
+                this._updateController();
+            },
+            _clearCapture:function(){
+                var interactCaptureCtx = this.interactCaptureLayer.canvasCtx;
+                interactCaptureCtx.setTransform(1,0,0,1,0,0);
+                interactCaptureCtx.clearRect(0,0 , this.get("width") , this.get("height")); 
+            },
+            _updateController:function(){
+                //draw controller frame
+                var _self              = this,
+                    interactCaptureCtx = _self.interactCaptureLayer.canvasCtx;
 
-            if(!_self.interactDoingLayer){
-                //clear controller
-                _self._clearCapture();
-            }else{
-                var squreWidth         = 6,
-                    strokeStyle        = "#7777FF",
-                    fillStyle          = "#7777FF",
-                    lineWidth          = 2,
-                    lineCap            = "square",
-                    targetRotateDeg = _self.interactDoingLayer.rotateDeg,
-                    targetScaleRate = _self.interactDoingLayer.scaleRate,
-                    targetCordX     = _self.interactDoingLayer.cordX,
-                    targetCordY     = _self.interactDoingLayer.cordY,
-                    targetWidth     = _self.interactDoingLayer.imgWidth  * targetScaleRate,
-                    targetHeight    = _self.interactDoingLayer.imgHeight * targetScaleRate,
-                    targetXLeft     = 0 - 0.5 * targetWidth,
-                    targetXRight    = 0 + 0.5 * targetWidth,
-                    targetYUpper    = 0 - 0.5 * targetHeight,
-                    targetYLower    = 0 + 0.5 * targetHeight;
-                                
-                _self._clearCapture(); 
+                if(!_self.interactDoingLayer){
+                    //clear controller
+                    _self._clearCapture();
+                }else{
+                    var squreWidth         = 6,
+                        strokeStyle        = "#7777FF",
+                        fillStyle          = "#7777FF",
+                        lineWidth          = 2,
+                        lineCap            = "square",
+                        targetRotateDeg = _self.interactDoingLayer.get("rotate"),
+                        targetScaleRate = _self.interactDoingLayer.get("scale"),
+                        targetCordX     = _self.interactDoingLayer.cordX,
+                        targetCordY     = _self.interactDoingLayer.cordY,
+                        targetWidth     = _self.interactDoingLayer.imgWidth  * targetScaleRate,
+                        targetHeight    = _self.interactDoingLayer.imgHeight * targetScaleRate,
+                        targetXLeft     = 0 - 0.5 * targetWidth,
+                        targetXRight    = 0 + 0.5 * targetWidth,
+                        targetYUpper    = 0 - 0.5 * targetHeight,
+                        targetYLower    = 0 + 0.5 * targetHeight;
+                                    
+                    _self._clearCapture(); 
 
-                interactCaptureCtx.setTransform(1,0,0,1,targetCordX,targetCordY);   //reset transform
-                interactCaptureCtx.rotate(targetRotateDeg * Math.PI/180);
+                    interactCaptureCtx.setTransform(1,0,0,1,targetCordX,targetCordY);   //reset transform
+                    interactCaptureCtx.rotate(targetRotateDeg * Math.PI/180);
 
-                // draw the rectangle outside
-                interactCaptureCtx.beginPath(); //upper left , clockwise
-                interactCaptureCtx.lineWidth   = lineWidth;
-                interactCaptureCtx.strokeStyle = strokeStyle;
-                interactCaptureCtx.lineCap     = lineCap;
-                interactCaptureCtx.fillStyle   = fillStyle;
-                interactCaptureCtx.moveTo(targetXLeft , targetYUpper);
-                interactCaptureCtx.lineTo(targetXRight, targetYUpper);
-                interactCaptureCtx.lineTo(targetXRight, targetYLower);
-                interactCaptureCtx.lineTo(targetXLeft , targetYLower);
-                interactCaptureCtx.lineTo(targetXLeft , targetYUpper);
-                interactCaptureCtx.stroke();
-                interactCaptureCtx.closePath();    
+                    // draw the rectangle outside
+                    interactCaptureCtx.beginPath(); //upper left , clockwise
+                    interactCaptureCtx.lineWidth   = lineWidth;
+                    interactCaptureCtx.strokeStyle = strokeStyle;
+                    interactCaptureCtx.lineCap     = lineCap;
+                    interactCaptureCtx.fillStyle   = fillStyle;
+                    interactCaptureCtx.moveTo(targetXLeft , targetYUpper);
+                    interactCaptureCtx.lineTo(targetXRight, targetYUpper);
+                    interactCaptureCtx.lineTo(targetXRight, targetYLower);
+                    interactCaptureCtx.lineTo(targetXLeft , targetYLower);
+                    interactCaptureCtx.lineTo(targetXLeft , targetYUpper);
+                    interactCaptureCtx.stroke();
+                    interactCaptureCtx.closePath();    
 
-                // draw the control point on the corner
-                drawControlPoint(interactCaptureCtx , squreWidth, targetXLeft , targetYUpper);
-                drawControlPoint(interactCaptureCtx , squreWidth, targetXRight, targetYUpper);
-                drawControlPoint(interactCaptureCtx , squreWidth, targetXRight, targetYLower);
-                drawControlPoint(interactCaptureCtx , squreWidth, targetXLeft , targetYLower);
-                drawControlPoint(interactCaptureCtx , squreWidth, targetXLeft , targetYUpper);
+                    // draw the control point on the corner
+                    drawControlPoint(interactCaptureCtx , squreWidth, targetXLeft , targetYUpper);
+                    drawControlPoint(interactCaptureCtx , squreWidth, targetXRight, targetYUpper);
+                    drawControlPoint(interactCaptureCtx , squreWidth, targetXRight, targetYLower);
+                    drawControlPoint(interactCaptureCtx , squreWidth, targetXLeft , targetYLower);
+                    drawControlPoint(interactCaptureCtx , squreWidth, targetXLeft , targetYUpper);
 
-                // draw the rotation handler
-                var pointRadius = 4; //TODO : 配置控制点尺寸
-                interactCaptureCtx.beginPath();
-                interactCaptureCtx.moveTo( 0 , targetYUpper );
-                interactCaptureCtx.lineTo( 0 , targetYUpper - 30);
-                interactCaptureCtx.stroke();
-                interactCaptureCtx.closePath();
+                    // draw the rotation handler
+                    var pointRadius = 4; //TODO : 配置控制点尺寸
+                    interactCaptureCtx.beginPath();
+                    interactCaptureCtx.moveTo( 0 , targetYUpper );
+                    interactCaptureCtx.lineTo( 0 , targetYUpper - 30);
+                    interactCaptureCtx.stroke();
+                    interactCaptureCtx.closePath();
 
-                interactCaptureCtx.beginPath();
-                interactCaptureCtx.arc(0 , targetYUpper -30, pointRadius, 0 , Math.PI * 2 );
-                interactCaptureCtx.fill();
-                interactCaptureCtx.closePath();
+                    interactCaptureCtx.beginPath();
+                    interactCaptureCtx.arc(0 , targetYUpper -30, pointRadius, 0 , Math.PI * 2 );
+                    interactCaptureCtx.fill();
+                    interactCaptureCtx.closePath();
 
+                }
+
+                function drawControlPoint(ctx,width,centerX,centerY){
+                    ctx.fillRect(centerX - width / 2 , centerY - width / 2 , width ,width);
+                }                
+            },
+            getMergedData:function(){
+                var captureEl = this.interactCaptureLayer.canvasEl,
+                    captureCtx = this.interactCaptureLayer.canvasCtx,
+                    dataURL;
+                this.deactiveInteract();
+
+                for(var i = 1 ; i < this.layers.length ; i++){  //不要绘入capture层
+                    var canvasEl = this.layers[i].canvasEl;
+                    captureCtx.drawImage(canvasEl,0,0);
+                }
+                
+                dataURL = captureEl.toDataURL("image/png");
+                this._clearCapture();
+
+                return dataURL;
             }
-
-            function drawControlPoint(ctx,width,centerX,centerY){
-                ctx.fillRect(centerX - width / 2 , centerY - width / 2 , width ,width);
-            }                
-        },
-        getMergedData:function(){
-            var captureEl = this.interactCaptureLayer.canvasEl,
-                captureCtx = this.interactCaptureLayer.canvasCtx,
-                dataURL;
-            this.deactiveInteract();
-
-            for(var i = 1 ; i < this.layers.length ; i++){  //不要绘入capture层
-                var canvasEl = this.layers[i].canvasEl;
-                captureCtx.drawImage(canvasEl,0,0);
-            }
-            
-            dataURL = captureEl.toDataURL("image/png");
-            this._clearCapture();
-
-            return dataURL;
-        }
-    });
+        },{}
+    );
 
     return DrawingPad;
 
-    // function DrawingPad(comConfig) {
-    //     var self = this;
-    //     //调用父类构造函数
-    //     DrawingPad.superclass.constructor.call(self, comConfig);
-    // }
-    // S.extend(DrawingPad, Base, /** @lends DrawingPad.prototype*/{
-
-    // }, {ATTRS : /** @lends DrawingPad*/{
-
-    // }});
 }, {requires:['node','dom', 'base']});
 
 
