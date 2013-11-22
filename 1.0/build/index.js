@@ -313,8 +313,8 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
             var interactDoingLayer = _self.interactDoingLayer;                        
             if(!interactDoingLayer) return; //非交互模式的情况
 
-            var mouseX        = e.offsetX,
-                mouseY        = e.offsetY,
+            var mouseX        = e.offsetX != undefined ? e.offsetX : e.pageX - Node(e.target).offset().left,
+                mouseY        = e.offsetY != undefined ? e.offsetY : e.pageY - Node(e.target).offset().top,
                 mousePosition = getMousePosition(mouseX,mouseY).position;
 
             mouseAction = true;
@@ -346,8 +346,8 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
             var interactDoingLayer = _self.interactDoingLayer;                        
             if(!interactDoingLayer) return; //非交互模式的情况
             
-            var mouseX          = e.offsetX,
-                mouseY          = e.offsetY,
+            var mouseX          = e.offsetX != undefined ? e.offsetX : e.pageX - Node(e.target).offset().left,
+                mouseY          = e.offsetY != undefined ? e.offsetY : e.pageY - Node(e.target).offset().top,
                 mouseStat       = getMousePosition(mouseX,mouseY),
                 mousePosition   = mouseStat.position,
                 mouseInfo       = mouseStat.info,
@@ -369,8 +369,8 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
                 };
 
             if(mouseAction == "move"){
-                interactDoingLayer.cordX += e.offsetX - startX;
-                interactDoingLayer.cordY += e.offsetY - startY;
+                interactDoingLayer.cordX += mouseX - startX;
+                interactDoingLayer.cordY += mouseY - startY;
                 interactDoingLayer.render();
 
                 _self._updateController();
@@ -533,11 +533,16 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
                     var canvasEl = this.layers[i].canvasEl;
                     captureCtx.drawImage(canvasEl,0,0);
                 }
-                
-                dataURL = captureEl.toDataURL("image/png");
-                this._clearCapture();
+                try{
+                    dataURL = captureEl.toDataURL("image/png");
+                    this._clearCapture();
 
-                return dataURL;
+                    return dataURL;
+                }catch(e){
+                    console.log("error when fetching data, maybe due to cross-domain issue");
+                    return "";
+                }
+                
             }
         },{}
     );
