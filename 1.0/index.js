@@ -388,7 +388,7 @@ KISSY.add(function (S, Node,Dom,Base) {
                 scaleRateY = Math.abs( mouseShadow[1] / (layerHeight * 0.5) );
                 scaleRate  = Math.min(scaleRateX , scaleRateY);
 
-                interactDoingLayer.set("scaleRate", scaleRate );
+                interactDoingLayer.set("scale", scaleRate );
                 interactDoingLayer.render();
 
                 _self._updateController();
@@ -409,7 +409,7 @@ KISSY.add(function (S, Node,Dom,Base) {
                     angle = Math.atan( relativeX /  relativeY) * 180 / Math.PI + 180;
                 }
 
-                interactDoingLayer.set("rotateDeg",angle);
+                interactDoingLayer.set("rotate",angle);
                 interactDoingLayer.render();
 
                 _self._updateController();
