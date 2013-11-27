@@ -25,9 +25,6 @@ module.exports = function(grunt) {
                     {
                         src: "<%= pkg.version %>/index.js",
                         dest: "<%= pkg.version %>/build/index.js"
-                    },{
-                        src: "<%= pkg.version %>/flashCanvas.js",
-                        dest: "<%= pkg.version %>/build/flashCanvas.js"
                     }
                 ]
             }

@@ -278,10 +278,12 @@ KISSY.add(function (S, Node,Dom,Base) {
 
                 //添加交互捕获层和相应事件
                 //交互捕捉层会自动生成，不提供用户自定义配置
-                _self.interactCaptureLayer = _self.addLayer({  
+                var captureLayerIndex = _self.addLayer({  
                     img     : null,
                     cusClass: CLASS_INTERACT
                 });
+
+                 _self.interactCaptureLayer = _self.layers[captureLayerIndex];
 
                 function getMousePosition(mouseX,mouseY){
                     var interactDoingLayer = _self.interactDoingLayer;
@@ -497,10 +499,16 @@ KISSY.add(function (S, Node,Dom,Base) {
                 );
 
                 this.layers.push(newLayer);
-                return newLayer;
+                return (this.layers.length - 1);
             },
-            deactiveInteract:function(){
-                this.interactDoingLayer = null;
+            activeInteract:function(layerIndex){
+                this.layers[layerIndex].activeInteract();
+            },
+            deactiveInteract:function(layerIndex){
+                var doingLayer = this.interactDoingLayer;
+                if(!doingLayer) return;
+                doingLayer.deactiveInteract();
+                doingLayer = null;
                 this._updateController();
             },
             _clearCapture:function(){
