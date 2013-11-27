@@ -611,6 +611,7 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
                         setTimeout(function(){ //flashCanvas的getDataURL是异步操作，很慢
                             dataURL = captureEl.toDataURL("image/png");
                             self._clearCapture();
+                            console.log(callback);
                             callback(dataURL);
                         } , delay);
                     }else{
