@@ -8,7 +8,7 @@
 KISSY.add(function(){
 
 window.FlashCanvasOptions = {
-    swfPath: "http://a.tbcdn.cn/s/kissy/gallery/drawingPad/1.0/",  //modify to CDN
+    // swfPath: "http://a.tbcdn.cn/s/kissy/gallery/drawingPad/1.0/",  //modify to CDN
     disableContextMenu: true
 };
 
