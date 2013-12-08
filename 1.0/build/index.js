@@ -661,6 +661,15 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
                 }
 
                 return ret;
+            },
+            setLayerPara:function(layerIndex,paraName,paraValue){
+                var self  = this,
+                    layer = self.layers[layerIndex];
+                if(arguments.length != 3 || !layer) return;
+
+                layer.set(paraName,paraValue);
+                layer.render();
+                self._updateController();
             }
         },{}
     );
