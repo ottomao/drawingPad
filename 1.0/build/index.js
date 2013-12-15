@@ -13,9 +13,7 @@ gallery/drawingPad/1.0/index
 //TODO : flashCanvas下的鼠标手势
 //TODO : 扔了cordX这个属性
 KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
-    var CLASS_INTERACT  = "_drawingPad_interact";
-    var DEFAULT_PROXY   = "http://www.tmall.com/go/rgn/tbs-proxy.php?file=";
-    // var FLASHCANVAS_PKG = "gallery/drawingPad/1.0/flashCanvas";
+    var CLASS_INTERACT  = "_drawingPad_interact";// var FLASHCANVAS_PKG = "gallery/drawingPad/1.0/flashCanvas";
 
     /**
      * [Layer description]
@@ -263,7 +261,7 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
                         }
                     },
                     proxyPrefix:{
-                        value:DEFAULT_PROXY,
+                        value:"",
                         setter:function(v){
                             return v;
                         },
