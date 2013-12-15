@@ -51,7 +51,7 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
                              _self.render();
                         }
                     });
-                    newSrc    = _self.fatherPad.get("proxyPrefix") ?
+                    newSrc    = _self.fatherPad.get("proxyPrefix") &&  !_self.fatherPad.flashCanvasEnabled ?  //有了flashCanvas之后，不再需要proxy支持
                                 _self.fatherPad.get("proxyPrefix") + ( /http:\/\//.test(v) ? v : "http://" + v ) + "?_random=" + new Date().getTime():
                                 v;
                     imgEl.src = newSrc;
@@ -688,7 +688,8 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
     //FlashCanvas源码
     function invokeFlashCanvas(){
         window.FlashCanvasOptions = {
-            swfPath: "http://www.tmall.com/go/rgn/tbs-proxy.php?file=http://a.tbcdn.cn/s/kissy/gallery/drawingPad/1.0/",  //modify to CDN
+            swfPath: "http://a.tbcdn.cn/s/kissy/gallery/drawingPad/1.0/",  //modify to CDN
+            usePolicyFile:true,
             // proxy:"http://www.tmall.com/go/rgn/tbs-proxy.php",
             disableContextMenu: true
         };
