@@ -1,3 +1,5 @@
+
+
 /**
  * @fileoverview 
  * @author 加里<xiaofeng.mxf@taobao.com>
@@ -106,6 +108,15 @@ KISSY.add(function (S, Node,Dom,Base) {
                 getter:function(v){
                     return v;
                 }
+            },
+            hide:{
+                value:false,
+                setter:function(v){
+                    return v;
+                },
+                getter:function(v){
+                    return v;
+                }
             }
         });
 
@@ -165,13 +176,18 @@ KISSY.add(function (S, Node,Dom,Base) {
                     imgWidth  = _self.imgWidth,
                     imgHeight = _self.imgHeight,
                     scaleRate = _self.get("scale"),
-                    rotateDeg = _self.get("rotate");
+                    rotateDeg = _self.get("rotate"),
+                    hide      = _self.get("hide");
 
                 ctx.setTransform(1,0,0,1,0,0);  
                 ctx.clearRect(0,0, _self.canvasEl.width , _self.canvasEl.height); 
 
                 if(!imgWidth){ //尚未载入完成，此时width == 0
                     return _self;
+                }
+
+                if(hide){ //设置隐藏
+                    return _self; 
                 }
 
                 //usage : context.setTransform(scaleX, skewX, skewY, scaleY, translateX, translateY);
