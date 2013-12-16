@@ -192,8 +192,6 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
                 if(!imgWidth){ //尚未载入完成，此时width == 0
                     return _self;
                 }
-                console.log(_self);
-                console.log(hide);
 
                 if(hide){ //设置隐藏
                     return _self; 
