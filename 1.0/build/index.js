@@ -65,6 +65,7 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base,JSON) {
             centerX:{
                 value:null,
                 setter: function(v) {
+                    this.cordX = v;
                     return v;
                 },
                 getter: function(v) {
@@ -74,6 +75,7 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base,JSON) {
             centerY:{
                 value:null,
                 setter: function(v) {
+                    this.cordY = v;
                     return v;
                 },
                 getter: function(v) {
@@ -622,7 +624,8 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base,JSON) {
             getMergedData:function(callback,delay){
                 //百事项目临时方案
                 if(delay == -1){
-                    this.upload.call(this,callback);    
+                    this.upload.call(this,callback); 
+                    return;
                 }
 
 
