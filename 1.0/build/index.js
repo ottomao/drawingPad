@@ -15,7 +15,7 @@ gallery/drawingPad/1.0/index
 //TODO : flashCanvas下的鼠标手势
 //TODO : 扔了cordX这个属性
 // http://a.tbcdn.cn/s/kissy/gallery/drawingPad/1.0/
-KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
+KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base,JSON) {
     var CLASS_INTERACT  = "_drawingPad_interact";// var FLASHCANVAS_PKG = "gallery/drawingPad/1.0/flashCanvas";
 
     /**
@@ -278,6 +278,15 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
                         }
                     },
                     proxyPrefix:{
+                        value:"",
+                        setter:function(v){
+                            return v;
+                        },
+                        getter:function(v){
+                            return v;
+                        }
+                    },
+                    uploadUrl:{
                         value:"",
                         setter:function(v){
                             return v;
@@ -611,6 +620,12 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
             },
             //delay in ms
             getMergedData:function(callback,delay){
+                //百事项目临时方案
+                if(delay == -1){
+                    this.upload.call(this,callback);    
+                }
+
+
                 var self  = this,
                     delay = delay || 4000,
                     captureEl  = self.interactCaptureLayer.canvasEl,
@@ -648,6 +663,44 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
                     return "";
                 }
                 
+            },
+            upload:function(callback){
+                var self=this;
+                var id = "J_uploadFrame_drawingPad";
+                self.getMergedData(function(data){
+                    var binaryData = data.replace(/^data:image\/png;base64,/,""),
+                        url        = self.get("uploadUrl"),
+                        wrapper    = Node(self.get("wrapper"));
+                    document.domain = "tmall.com";  //for iframe cross domain
+                    
+                    if(!Node.one("#"+id)){
+                        var iframeEl = Node('<iframe id="__id" name="__id" height="0" width="0" frameborder="0" scrolling="yes"></iframe>'.replace(/__id/g,id) );
+                        Node.one("body").append(iframeEl);
+
+                        var formEl = Node('<form class="J_form___id" target="__id" method="post" action="__target"><input type="hidden" name="img" value="___value"></form>'.replace(/__id/g,id).replace(/___value/g,binaryData).replace(/__target/g,url) );
+                        wrapper.append(formEl);
+                    }else{
+                        var iframeEl = Node.one("#"+id);
+                        var formEl   = Node.one(".J_form_"+id);
+                    }
+
+                    iframeEl.on("load",function(){
+                        var iFrameBody;
+                        if ( this.contentDocument ){ // FF
+                            iFrameBody = this.contentDocument.getElementsByTagName('body')[0];
+                        }else if ( this.contentWindow ){ // IE
+                            iFrameBody = this.contentWindow.document.getElementsByTagName('body')[0];
+                        }
+                        var text = iFrameBody.innerText || iFrameBody.textContent;
+
+                        if(text){
+                            callback && callback(JSON.parse(text) );
+                        }
+                    }); 
+
+                    formEl.getDOMNode().submit(); 
+
+                });
             },
             getLayerInfo:function(layerIndex){
                 var self        = this,
@@ -747,7 +800,7 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base) {
 
     return DrawingPad;
 
-}, {requires:['node','dom', 'base']});
+}, {requires:['node','dom', 'base','json']});
 
 
 
