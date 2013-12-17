@@ -674,7 +674,7 @@ KISSY.add(function (S, Node,Dom,Base,JSON) {
                         var iframeEl = Node('<iframe id="__id" name="__id" height="0" width="0" frameborder="0" scrolling="yes"></iframe>'.replace(/__id/g,id) );
                         Node.one("body").append(iframeEl);
 
-                        var formEl = Node('<form class="J_form___id" target="__id" method="post" action="__target"><input type="hidden" name="img" value="___value"></form>'.replace(/__id/g,id).replace(/___value/g,binaryData).replace(/__target/g,url) );
+                        var formEl = Node('<form class="J_form___id" target="__id" method="post" action="__target"><input type="hidden" name="img" value="___value" /><input name="encode" value="true" /><input name="iframe" value="true" /></form>'.replace(/__id/g,id).replace(/___value/g,binaryData).replace(/__target/g,url) );
                         wrapper.append(formEl);
                     }else{
                         var iframeEl = Node.one("#"+id);
