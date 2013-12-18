@@ -648,12 +648,12 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base,JSON) {
                 try{
                     if(self.flashCanvasEnabled){
                         setTimeout(function(){ //flashCanvas的getDataURL是异步操作，很慢
-                            dataURL = captureEl.toDataURL("image/png");
+                            dataURL = captureEl.toDataURL("image/jpeg");
                             self._clearCapture();
                             callback(dataURL);
                         } , delay);
                     }else{
-                        dataURL = captureEl.toDataURL("image/png");
+                        dataURL = captureEl.toDataURL("image/jpeg");
                         self._clearCapture();
                         if(!callback){
                             return dataURL;
@@ -671,7 +671,7 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base,JSON) {
                 var self=this;
                 var id = "J_uploadFrame_drawingPad";
                 self.getMergedData(function(data){
-                    var binaryData = data.replace(/^data:image\/png;base64,/,""),
+                    var binaryData = data.replace(/^data:image\/png;base64,/,"").replace(/^data:image\/jpeg;base64,/,""),
                         url        = self.get("uploadUrl"),
                         wrapper    = Node(self.get("wrapper"));
                     document.domain = "tmall.com";  //for iframe cross domain
