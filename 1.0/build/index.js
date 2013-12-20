@@ -686,6 +686,7 @@ KISSY.add('gallery/drawingPad/1.0/index',function (S, Node,Dom,Base,JSON) {
                         var iframeEl = Node.one("#"+id);
                         var formEl   = Node.one(".J_form_"+id);
                     }
+                    
 
                     iframeEl.on("load",function(){
                         var iFrameBody;
