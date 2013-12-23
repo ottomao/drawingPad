@@ -31,8 +31,8 @@ KISSY.add(function (S, Node,Dom,Base,JSON) {
 
                     //TODO:把这个jQuery imgProxy给挪进来
                     //TODO:flashCanvas下不用imgProxy
-                    // imgproxy.SWF = "http://a.tbcdn.cn/s/kissy/gallery/drawingPad/2.0/ImgProxy2.swf";
-                    imgproxy.SWF = "http://taobao.com/ImgProxy.swf";
+                    imgproxy.SWF = "http://a.tbcdn.cn/s/kissy/gallery/drawingPad/2.0/ImgProxy.swf";
+                    // imgproxy.SWF = "http://taobao.com/ImgProxy.swf";
 
                     imgproxy.load(v,
                         function(imgBase64) {
@@ -763,6 +763,8 @@ KISSY.add(function (S, Node,Dom,Base,JSON) {
                 layer.set(paraName,paraValue);
                 layer.render();
                 self._updateController();
+
+                return self;
             }
         },{}
     );
