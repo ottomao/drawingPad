@@ -4,8 +4,6 @@ combined files :
 gallery/drawingPad/2.0/index
 
 */
-
-
 /**
  * @fileoverview 
  * @author 加里<xiaofeng.mxf@taobao.com>
@@ -33,30 +31,59 @@ KISSY.add('gallery/drawingPad/2.0/index',function (S, Node,Dom,Base,JSON) {
                     if(!v) return;
 
                     var _self = this,
-                        imgEl = document.createElement("img"),
-                        newSrc;
+                        imgEl = document.createElement("img");
 
                     _self.img = imgEl;
 
-                    Node(imgEl).on("load",function(){  //异步载入，更新宽高
-                        _self.imgWidth  = imgEl.width;
-                        _self.imgHeight = imgEl.height;
+                    //TODO:把这个jQuery imgProxy给挪进来
+                    //TODO:flashCanvas下不用imgProxy
+                    // imgproxy.SWF = "http://a.tbcdn.cn/s/kissy/gallery/drawingPad/2.0/ImgProxy2.swf";
+                    imgproxy.SWF = "http://taobao.com/ImgProxy.swf";
 
-                        _self.cordX = S.isNumber(_self.get("centerX"))?  _self.get("centerX") : 0.5 * _self.imgWidth; 
-                        _self.cordY = S.isNumber(_self.get("centerY"))?  _self.get("centerY") : 0.5 * _self.imgHeight; 
-                        if(_self.fatherPad.flashCanvasEnabled){
-                            setTimeout(function(){
-                                _self.render.call(_self);   //flashCanvas下会有一些异步操作，直接渲染会出错，原因不详
-                            },100);    
-                        }else{
-                             _self.render();
+                    imgproxy.load(v,
+                        function(imgBase64) {
+                            imgEl.src = imgBase64;
+                            console.log(imgBase64);
+
+                            _self.imgWidth  = imgEl.width;
+                            _self.imgHeight = imgEl.height;
+
+                            _self.cordX = S.isNumber(_self.get("centerX"))?  _self.get("centerX") : 0.5 * _self.imgWidth; 
+                            _self.cordY = S.isNumber(_self.get("centerY"))?  _self.get("centerY") : 0.5 * _self.imgHeight; 
+                            if(_self.fatherPad.flashCanvasEnabled){
+                                setTimeout(function(){
+                                    _self.render.call(_self);   //flashCanvas下会有一些异步操作，直接渲染会出错，原因不详
+                                },100);    
+                            }else{
+                                 _self.render();
+                            }
+                        },
+                        function(msg) {
+                            console.error(msg);
                         }
+                    );
+
+
+
+                    Node(imgEl).on("load",function(){  //异步载入，更新宽高
+                        // _self.imgWidth  = imgEl.width;
+                        // _self.imgHeight = imgEl.height;
+
+                        // _self.cordX = S.isNumber(_self.get("centerX"))?  _self.get("centerX") : 0.5 * _self.imgWidth; 
+                        // _self.cordY = S.isNumber(_self.get("centerY"))?  _self.get("centerY") : 0.5 * _self.imgHeight; 
+                        // if(_self.fatherPad.flashCanvasEnabled){
+                        //     setTimeout(function(){
+                        //         _self.render.call(_self);   //flashCanvas下会有一些异步操作，直接渲染会出错，原因不详
+                        //     },100);    
+                        // }else{
+                        //      _self.render();
+                        // }
                     });
-                    newSrc    = _self.fatherPad.get("proxyPrefix") &&  !_self.fatherPad.flashCanvasEnabled ?  //有了flashCanvas之后，不再需要proxy支持
-                                _self.fatherPad.get("proxyPrefix") + ( /http:\/\//.test(v) ? v : "http://" + v ) + "?_random=" + new Date().getTime():
-                                v;
-                    imgEl.src = newSrc;
-                    return newSrc;
+                    // newSrc    = _self.fatherPad.get("proxyPrefix") &&  !_self.fatherPad.flashCanvasEnabled ?  //有了flashCanvas之后，不再需要proxy支持
+                    //             _self.fatherPad.get("proxyPrefix") + ( /http:\/\//.test(v) ? v : "http://" + v ) + "?_random=" + new Date().getTime():
+                    //             v;
+                    // imgEl.src = newSrc;
+                    return  v; 
                 },
                 getter: function(v) {
                     return v;

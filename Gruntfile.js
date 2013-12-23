@@ -29,6 +29,10 @@ module.exports = function(grunt) {
                     {
                         src: "<%= pkg.version %>/imgproxy.js",
                         dest: "<%= pkg.version %>/build/imgproxy.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/swfObj.js",
+                        dest: "<%= pkg.version %>/build/swfObj.js"
                     }
                 ]
             }
