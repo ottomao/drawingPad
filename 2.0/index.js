@@ -37,7 +37,7 @@ KISSY.add(function (S, Node,Dom,Base,JSON) {
                     imgproxy.load(v,
                         function(imgBase64) {
                             imgEl.src = imgBase64;
-                            console.log(imgBase64);
+                            // console.log(imgBase64);
 
                             _self.imgWidth  = imgEl.width;
                             _self.imgHeight = imgEl.height;
