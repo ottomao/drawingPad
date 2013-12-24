@@ -33,6 +33,10 @@ module.exports = function(grunt) {
                     {
                         src: "<%= pkg.version %>/swfObj.js",
                         dest: "<%= pkg.version %>/build/swfObj.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/jszip.js",
+                        dest: "<%= pkg.version %>/build/jszip.js"
                     }
                 ]
             }
