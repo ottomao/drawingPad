@@ -642,7 +642,8 @@ KISSY.add(function (S, Node,Dom,Base,JSON) {
                 }                
             },
             //delay in ms
-            getMergedData:function(callback,delay){
+            //TODO : 配置项合并
+            getMergedData:function(callback,delay,ifRemovePrefix){
                 //百事项目临时方案
                 if(delay == -1){
                     this.upload.call(this,callback); 
@@ -670,11 +671,18 @@ KISSY.add(function (S, Node,Dom,Base,JSON) {
                     if(self.flashCanvasEnabled){
                         setTimeout(function(){ //flashCanvas的getDataURL是异步操作，很慢
                             dataURL = captureEl.toDataURL("image/jpeg");
+                            if(ifRemovePrefix){
+                                dataURL = dataURL.replace(/^data:image\/png;base64,/,"").replace(/^data:image\/jpeg;base64,/,"")
+                            }
+
                             self._clearCapture();
                             callback(dataURL);
                         } , delay);
                     }else{
                         dataURL = captureEl.toDataURL("image/jpeg");
+                        if(ifRemovePrefix){
+                            dataURL = dataURL.replace(/^data:image\/png;base64,/,"").replace(/^data:image\/jpeg;base64,/,"")
+                        }
                         self._clearCapture();
                         if(!callback){
                             return dataURL;
