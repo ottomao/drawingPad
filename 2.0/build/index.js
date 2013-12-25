@@ -13,7 +13,7 @@ gallery/drawingPad/2.0/index
 //TODO : flashCanvas下的鼠标手势
 //TODO : 扔了cordX这个属性
 // http://a.tbcdn.cn/s/kissy/gallery/drawingPad/1.0/
-KISSY.add('gallery/drawingPad/2.0/index',function (S, Node,Dom,Base,JSON) {
+KISSY.add('gallery/drawingPad/2.0/index',function (S, Node,Dom,Base,JSON,Imgproxy) {
     var CLASS_INTERACT  = "_drawingPad_interact";// var FLASHCANVAS_PKG = "gallery/drawingPad/1.0/flashCanvas";
 
     /**
@@ -35,15 +35,10 @@ KISSY.add('gallery/drawingPad/2.0/index',function (S, Node,Dom,Base,JSON) {
 
                     _self.img = imgEl;
 
-                    //TODO:把这个jQuery imgProxy给挪进来
-                    //TODO:flashCanvas下不用imgProxy
-                    imgproxy.SWF = "http://a.tbcdn.cn/s/kissy/gallery/drawingPad/2.0/ImgProxy.swf";
-                    // imgproxy.SWF = "http://taobao.com/ImgProxy.swf";
-
-                    imgproxy.load(v,
+                    //TODO:flashCanvas下不用ImgProxy
+                    Imgproxy.load(v,
                         function(imgBase64) {
                             imgEl.src = imgBase64;
-                            // console.log(imgBase64);
 
                             _self.imgWidth  = imgEl.width;
                             _self.imgHeight = imgEl.height;
@@ -59,30 +54,10 @@ KISSY.add('gallery/drawingPad/2.0/index',function (S, Node,Dom,Base,JSON) {
                             }
                         },
                         function(msg) {
-                            console.error(msg);
+                            S.log("[drawingPad] fail to load img: " + msg);
                         }
                     );
 
-
-
-                    Node(imgEl).on("load",function(){  //异步载入，更新宽高
-                        // _self.imgWidth  = imgEl.width;
-                        // _self.imgHeight = imgEl.height;
-
-                        // _self.cordX = S.isNumber(_self.get("centerX"))?  _self.get("centerX") : 0.5 * _self.imgWidth; 
-                        // _self.cordY = S.isNumber(_self.get("centerY"))?  _self.get("centerY") : 0.5 * _self.imgHeight; 
-                        // if(_self.fatherPad.flashCanvasEnabled){
-                        //     setTimeout(function(){
-                        //         _self.render.call(_self);   //flashCanvas下会有一些异步操作，直接渲染会出错，原因不详
-                        //     },100);    
-                        // }else{
-                        //      _self.render();
-                        // }
-                    });
-                    // newSrc    = _self.fatherPad.get("proxyPrefix") &&  !_self.fatherPad.flashCanvasEnabled ?  //有了flashCanvas之后，不再需要proxy支持
-                    //             _self.fatherPad.get("proxyPrefix") + ( /http:\/\//.test(v) ? v : "http://" + v ) + "?_random=" + new Date().getTime():
-                    //             v;
-                    // imgEl.src = newSrc;
                     return  v; 
                 },
                 getter: function(v) {
@@ -799,7 +774,6 @@ KISSY.add('gallery/drawingPad/2.0/index',function (S, Node,Dom,Base,JSON) {
         window.FlashCanvasOptions = {
             swfPath: "http://a.tbcdn.cn/s/kissy/gallery/drawingPad/1.0/",  //modify to CDN
             usePolicyFile:true,
-            // proxy:"http://www.tmall.com/go/rgn/tbs-proxy.php",
             disableContextMenu: true
         };
 
@@ -841,7 +815,7 @@ KISSY.add('gallery/drawingPad/2.0/index',function (S, Node,Dom,Base,JSON) {
 
     return DrawingPad;
 
-}, {requires:['node','dom', 'base','json']});
+}, {requires:['node','dom', 'base','json','gallery/imgProxy/1.0/index']});
 
 
 

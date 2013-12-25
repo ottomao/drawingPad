@@ -27,14 +27,6 @@ module.exports = function(grunt) {
                         dest: "<%= pkg.version %>/build/index.js"
                     },
                     {
-                        src: "<%= pkg.version %>/imgproxy.js",
-                        dest: "<%= pkg.version %>/build/imgproxy.js"
-                    },
-                    {
-                        src: "<%= pkg.version %>/swfObj.js",
-                        dest: "<%= pkg.version %>/build/swfObj.js"
-                    },
-                    {
                         src: "<%= pkg.version %>/jszip.js",
                         dest: "<%= pkg.version %>/build/jszip.js"
                     }
@@ -70,7 +62,7 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         cwd: '<%= pkg.version %>',
-                        src: ['**/*.css',"!build/*.css"],
+                        src: ['**/*.css','**/*.swf',"!build/*.css"],
                         dest: '<%= pkg.version %>/build'
                     }
                 ]
