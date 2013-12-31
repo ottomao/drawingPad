@@ -30,27 +30,33 @@ KISSY.add(function (S, Node,Dom,Base,JSON,Imgproxy) {
                     _self.img = imgEl;
 
                     //TODO:flashCanvas下不用ImgProxy
-                    Imgproxy.load(v,
-                        function(imgBase64) {
-                            imgEl.src = imgBase64;
+                    function loadImg(src){
+                        imgEl.src= src;
 
-                            _self.imgWidth  = imgEl.width;
-                            _self.imgHeight = imgEl.height;
+                        _self.imgWidth  = imgEl.width;
+                        _self.imgHeight = imgEl.height;
 
-                            _self.cordX = S.isNumber(_self.get("centerX"))?  _self.get("centerX") : 0.5 * _self.imgWidth; 
-                            _self.cordY = S.isNumber(_self.get("centerY"))?  _self.get("centerY") : 0.5 * _self.imgHeight; 
-                            if(_self.fatherPad.flashCanvasEnabled){
-                                setTimeout(function(){
-                                    _self.render.call(_self);   //flashCanvas下会有一些异步操作，直接渲染会出错，原因不详
-                                },100);    
-                            }else{
-                                 _self.render();
-                            }
-                        },
-                        function(msg) {
-                            S.log("[drawingPad] fail to load img: " + msg);
+                        _self.cordX = S.isNumber(_self.get("centerX"))?  _self.get("centerX") : 0.5 * _self.imgWidth; 
+                        _self.cordY = S.isNumber(_self.get("centerY"))?  _self.get("centerY") : 0.5 * _self.imgHeight; 
+                        if(_self.fatherPad.flashCanvasEnabled){
+                            setTimeout(function(){
+                                _self.render.call(_self);   //flashCanvas下会有一些异步操作，直接渲染会出错，原因不详
+                            },100);    
+                        }else{
+                             _self.render();
                         }
-                    );
+                    }
+
+                    if(_self.fatherPad.flashCanvasEnabled){
+                        loadImg(v);
+                    }else{
+                        Imgproxy.load(v,
+                            loadImg,
+                            function(msg) {
+                                S.log("[drawingPad] fail to load img: " + msg);
+                            }
+                        );    
+                    }
 
                     return  v; 
                 },
