@@ -124,4 +124,4 @@
 - 异步模式下，对于原生支持canvas的浏览器，callback是立即执行的。
 - delayInMs参数只针对IE8以下的浏览器生效（它们原生不支持canvas)。
 - 由于flashCanvas的技术限制，这里的delay值只能手动调整测试，大尺寸图片要用高delay。最终使得浏览器能正确输出合成后的图片即可。
-- 代码里已经嵌入了flashCanvas Pro，阿里以外的同学如需在IE8及以下浏览器使用此组件，请遵守[FlashCanvas相关协议](http://flashcanvas.net/purchase)。
+- 代码里已经嵌入了flashCanvas Pro，阿里系已经购买过此License（[Ref](http://work.tmall.net/issues/8271)）。其他同学如需在IE8及以下浏览器使用此组件，请遵守[FlashCanvas相关协议](http://flashcanvas.net/purchase)。
