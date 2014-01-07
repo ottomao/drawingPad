@@ -1,7 +1,7 @@
 {
     "name": "drawingPad",
     "version": "2.0",
-    "desc": "",
+    "desc": "图片交互与合成组件，全浏览器兼容。使用场景：用户上传头像后合成贺卡等。",
     "cover": "",
     "tag":"html5,canvas,绘图",
     "author": {
