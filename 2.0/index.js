@@ -29,8 +29,8 @@ KISSY.add(function (S, Node,Dom,Base,JSON,Imgproxy) {
 
                     _self.img = imgEl;
 
-                    //TODO:flashCanvas下不用ImgProxy
                     function loadImg(src){
+                        console.log(src);
                         imgEl.src= src;
 
                         _self.imgWidth  = imgEl.width;
