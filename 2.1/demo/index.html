@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>interact Pad</title>
+    <script src="http://g.tbcdn.cn/kissy/k/1.3.2/seed-min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./demo.css">
+</head>
+<body> 
+    <div class="container">
+        <div class="left">
+
+            <!--留出一个容器，供组件使用 -->
+            <div class="canvasWrapper"> </div>
+        </div>
+
+        <div class="right">
+            <h4>图层管理</h4>
+            <table>
+                <tr>
+                    <td class="thumbImg"><img src="http://gtms01.alicdn.com/tps/i1/T14GxoXy8jXXaMrwve-700-430.png" /></td>
+                    <td class="action act-active"><a class="frameAct" href="#">激活鼠标拖动交互</a></td>
+                    <td class="action all_cancel" rowspan="3"><a class="all_cancel" href="#">退出交互</a></td>
+                </tr>
+
+                <tr>
+                    <td class="thumbImg"><img src="http://gtms01.alicdn.com/tps/i1/T1oVxmXqVhXXb4HOvo-600-375.jpg_q90.jpg" /></td>
+                    <td class="action act-active"><a class="item1Act" href="#">激活鼠标拖动交互</a></td>
+                </tr>
+
+                <tr>
+                    <td class="thumbImg"><img src="http://gtms01.alicdn.com/tps/i1/T1WuhmXD8hXXaeHbsb-100-100.png" /></td>
+                    <td class="action act-active"><a class="item2Act" href="#">激活鼠标拖动交互</a></td>
+                </tr>
+
+                <tr>
+                    <td class="action"><a class="set_hide" href="#">隐藏相框</a></td>
+                    <td class="action"><a class="set_show" href="#">显示相框</a></td>
+                </tr>
+
+                <tr>
+                    <td class="action"><a class="set_rotate" href="#">设置旋转角度</a></td>
+                    <td class="action"><a class="set_scale" href="#">设置缩放比例</a></td>
+                    <td class="action"><a class="set_image" href="#">设置图片</a></td>
+                </tr>
+
+                <tr>
+                    <td class="action act-cancel"><a class="getData" href="#">获取图像</a></td>
+                    <td class="action act-cancel"><a class="getAllInter" href="#">获取交互数据(console)</a></td>
+                </tr>
+
+            </table>
+        </div>
+        <div style="clear:both"> </div>
+
+        <!-- <input type="file" id="J_selectFile" /> -->
+    </div>
+
+    <script type="text/javascript">
+
+        /*调试模式，组件使用者无需使用*/
+        var S = KISSY;
+        S.Config.debug = true;
+        if (S.Config.debug) {
+            S.config({
+                packages:[
+                    {
+                        name:"gallery/drawingPad/2.1",
+                        path:"../",
+                        charset:"utf-8",
+                        ignorePackageNameInUri:true
+                    }
+                ]
+            });
+        }
+
+
+        /*使用组件*/
+        KISSY.use("gallery/drawingPad/2.1/index,node",function(S,DrawingPad,Node,F){
+            S.ready(function(){
+                
+                var frameEl =  "http://gtms01.alicdn.com/tps/i1/T14GxoXy8jXXaMrwve-700-430.png";
+                var itemEl1 = "http://gtms01.alicdn.com/tps/i1/T1oVxmXqVhXXb4HOvo-600-375.jpg_q90.jpg";
+                // var itemEl1 = "http://gtms01.alicdn.com/tps/i1/T1WuhmXD8hXXaeHbsb-100-100.png";
+                var itemEl2 = "http://gtms01.alicdn.com/tps/i1/T1WuhmXD8hXXaeHbsb-100-100.png";
+        
+                
+                //初始化绘图板
+                //若不使用proxy，直接置proxyPrefix:""
+                //百事项目："http://pepsi.tmall.com/usrimg?src=" 
+                var drawingPad = new DrawingPad({
+                    height      : 430,
+                    width       : 700,
+                    wrapper     : S.get(".canvasWrapper")
+                    // proxyPrefix : "",
+                    // uploadUrl   : "http://api.mallbrand.tmall.com/inter/postFrame.html"
+                    // uploadUrl   : "http://api.mallbrand.tmall.com/service/imgUpload.do"
+                });
+
+                //添加图层，添加顺序即是覆盖顺序
+                var itemLayer = drawingPad.addLayer({
+                    img      : itemEl1, //图层的图形素材，必须指定 
+                    centerX  : 200,     //图片的中心x，可选，默认0
+                    centerY  : 200,     //图片的中心y，可选，默认0
+                    rotate   : 10,      //旋转角度,可选，默认0
+                    scale    : 1,       //缩放比例，可选，默认0
+                    cusClass : "myClass", //自定义样式，可选,
+                    hide     : false
+                });
+
+                //添加图层，添加顺序即是覆盖顺序
+                var frameLayer = drawingPad.addLayer({
+                    img   : frameEl
+                });
+
+                var itemLayer2;
+
+                //添加图层，添加顺序即是覆盖顺序
+                setTimeout(function(){
+                    itemLayer2 = drawingPad.addLayer({
+                        img : itemEl2
+                    });
+
+                },2000);
+
+                Node.one(".item1Act").on("click",function(){
+                    drawingPad.activeInteract(itemLayer);
+                });
+
+                Node.one(".item2Act").on("click",function(){
+                    drawingPad.activeInteract(itemLayer2);
+                });
+
+                Node.one(".frameAct").on("click",function(){
+                    drawingPad.activeInteract(frameLayer);
+                });
+
+                Node.one(".all_cancel").on("click",function(){
+                    drawingPad.deactiveInteract();  //退出所有图层的交互模式
+                });
+
+                Node.one(".set_rotate").on("click",function(){
+                    drawingPad.setLayerPara(itemLayer2,"rotate",180); //[-180,180]
+                });
+
+                Node.one(".set_scale").on("click",function(){
+                    drawingPad.setLayerPara(itemLayer2,"scale",7); //大于0
+                });
+
+                Node.one(".set_image").on("click",function(){
+                    drawingPad.setLayerPara(itemLayer,"img",frameEl);
+                });
+
+                Node.one(".set_hide").on("click",function(){
+                    drawingPad.setLayerPara(frameLayer,"hide",true);
+                });
+
+                Node.one(".set_show").on("click",function(){
+                    // drawingPad.setLayerPara(frameLayer,"centerX",500);
+                    // drawingPad.setLayerPara(frameLayer,"centerY",600);
+
+                    drawingPad.setLayerPara(frameLayer,"hide",false);
+                });
+
+                //获取交互数据
+                Node.one(".getAllInter").on("click",function(){
+                    var data = drawingPad.getLayerInfo();
+                    console.log(data);
+                });
+
+                //获取合并后的数据，并在新窗口中打开预览
+                Node.one(".getData").on("click",function(){
+                    var data = drawingPad.getMergedData(function(data){
+                        S.log(data);
+
+                        if(S.UA.chrome){
+                            window.open(data,"_blank");
+                        }
+                    },8000);
+                    // alert(data);
+                });
+
+                //玩儿文字的时候，可以手动加一层，然后获取上下文来操作canvasContext
+                //不要对这个图层进行交互操作！
+                var textLayer = drawingPad.addLayer({}),
+                    ctx = drawingPad.getLayerCanvasCtx(textLayer); //获取对应图层的canvas绘图上下文，即canvas.getContext("2d")
+
+                ctx.font="30px Verdana";
+                ctx.fillText("我的新头像，哈哈",200,50);
+            });
+
+        });
+
+    </script>
+
+</body>
+</html>

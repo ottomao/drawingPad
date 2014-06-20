@@ -1,0 +1,60 @@
+canvas{
+    border: 1px dashed #F00;
+}
+
+table{
+    border-collapse: collapse;
+}
+
+tr:hover{
+    background: #DEDEDE;
+    -webkit-transition:0.2s;
+}
+
+tr:hover a{
+    color: #333;
+}
+
+tr:hover img{
+    border:1px solid #AAA;
+}
+
+td{
+    border: 1px solid #AAA;
+    border-left: none;
+    border-right: none;
+    padding: 10px;
+}
+
+td.thumbImg{
+    width: 120px;
+}
+
+td.action{
+    width: 80px;
+    text-align: center;
+}
+
+td a{
+    text-decoration: none;
+    color:#888;
+}
+
+td a:hover{
+    text-decoration: underline;
+}
+
+.thumbImg img{
+    max-height: 50px;
+    border: 1px solid #FFF;
+}
+
+.container{
+    width: 90%;
+    margin: 10% auto;
+}
+
+.left{
+    width: 720px;
+    float: left;
+}

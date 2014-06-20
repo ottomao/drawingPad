@@ -1,3 +1,9 @@
+/*
+combined files : 
+
+gallery/drawingPad/2.1/index
+
+*/
 /**
  * @fileoverview 
  * @author 加里<xiaofeng.mxf@taobao.com>
@@ -7,7 +13,7 @@
 //TODO : flashCanvas下的鼠标手势
 //TODO : 扔了cordX这个属性
 // http://a.tbcdn.cn/s/kissy/gallery/drawingPad/1.0/
-KISSY.add(function (S, Node,Dom,Base,JSON,Imgproxy) {
+KISSY.add('gallery/drawingPad/2.1/index',function (S, Node,Dom,Base,JSON,Imgproxy) {
     var CLASS_INTERACT  = "_drawingPad_interact";// var FLASHCANVAS_PKG = "gallery/drawingPad/1.0/flashCanvas";
 
     /**
@@ -30,7 +36,6 @@ KISSY.add(function (S, Node,Dom,Base,JSON,Imgproxy) {
                     _self.img = imgEl;
 
                     function loadImg(src){
-                        console.log(src);
                         imgEl.src= src;
 
                         _self.imgWidth  = imgEl.width;
@@ -277,24 +282,6 @@ KISSY.add(function (S, Node,Dom,Base,JSON,Imgproxy) {
                             return v;
                         },
                         getter: function(v) {
-                            return v;
-                        }
-                    },
-                    proxyPrefix:{
-                        value:"",
-                        setter:function(v){
-                            return v;
-                        },
-                        getter:function(v){
-                            return v;
-                        }
-                    },
-                    uploadUrl:{
-                        value:"",
-                        setter:function(v){
-                            return v;
-                        },
-                        getter:function(v){
                             return v;
                         }
                     }
@@ -624,12 +611,6 @@ KISSY.add(function (S, Node,Dom,Base,JSON,Imgproxy) {
             //delay in ms
             //TODO : 配置项合并
             getMergedData:function(callback,delay,ifRemovePrefix){
-                //百事项目临时方案
-                if(delay == -1){
-                    this.upload.call(this,callback); 
-                    return;
-                }
-
 
                 var self  = this,
                     delay = delay || 4000,
@@ -639,10 +620,6 @@ KISSY.add(function (S, Node,Dom,Base,JSON,Imgproxy) {
                 self.deactiveInteract();
 
                 for(var i = 1 ; i < self.layers.length ; i++){  //不要绘入capture层
-
-                    // alert(i.toString());
-                    // alert(self.layers[i]);
-                    // alert(self.layers[i].canvasEl);
                     var canvasElement = self.layers[i].canvasEl;
                     captureCtx.drawImage(canvasElement,0,0);
                 }
@@ -676,45 +653,6 @@ KISSY.add(function (S, Node,Dom,Base,JSON,Imgproxy) {
                 }
                 
             },
-            upload:function(callback){
-                var self=this;
-                var id = "J_uploadFrame_drawingPad";
-                self.getMergedData(function(data){
-                    var binaryData = data.replace(/^data:image\/png;base64,/,"").replace(/^data:image\/jpeg;base64,/,""),
-                        url        = self.get("uploadUrl"),
-                        wrapper    = Node(self.get("wrapper"));
-                    document.domain = "tmall.com";  //for iframe cross domain
-                    
-                    if(!Node.one("#"+id)){
-                        var iframeEl = Node('<iframe id="__id" name="__id" height="0" width="0" frameborder="0" scrolling="yes"></iframe>'.replace(/__id/g,id) );
-                        Node.one("body").append(iframeEl);
-
-                        var formEl = Node('<form class="J_form___id" target="__id" method="post" action="__target"><input type="hidden" name="img" value="___value" /><input name="encode" value="true" /><input name="iframe" value="true" /></form>'.replace(/__id/g,id).replace(/___value/g,binaryData).replace(/__target/g,url) );
-                        wrapper.append(formEl);
-                    }else{
-                        var iframeEl = Node.one("#"+id);
-                        var formEl   = Node.one(".J_form_"+id);
-                    }
-                    
-
-                    iframeEl.on("load",function(){
-                        var iFrameBody;
-                        if ( this.contentDocument ){ // FF
-                            iFrameBody = this.contentDocument.getElementsByTagName('body')[0];
-                        }else if ( this.contentWindow ){ // IE
-                            iFrameBody = this.contentWindow.document.getElementsByTagName('body')[0];
-                        }
-                        var text = iFrameBody.innerText || iFrameBody.textContent;
-
-                        if(text){
-                            callback && callback(JSON.parse(text) );
-                        }
-                    }); 
-
-                    formEl.getDOMNode().submit(); 
-
-                });
-            },
             getLayerInfo:function(layerIndex){
                 var self        = this,
                     layers      = self.layers,
@@ -742,6 +680,14 @@ KISSY.add(function (S, Node,Dom,Base,JSON,Imgproxy) {
                 }
 
                 return ret;
+            },
+            getLayerCanvasCtx:function(layerIndex){
+                var layer = this.layers[layerIndex];
+                if(layer){
+                    return layer.canvasCtx;
+                }else{
+                    return null;
+                }
             },
             setLayerPara:function(layerIndex,paraName,paraValue){
                 var self  = this,
@@ -815,6 +761,7 @@ KISSY.add(function (S, Node,Dom,Base,JSON,Imgproxy) {
     return DrawingPad;
 
 }, {requires:['node','dom', 'base','json','gallery/imgProxy/1.0/index']});
+
 
 
 
