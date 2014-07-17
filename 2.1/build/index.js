@@ -36,20 +36,21 @@ KISSY.add('gallery/drawingPad/2.1/index',function (S, Node,Dom,Base,JSON,Imgprox
                     _self.img = imgEl;
 
                     function loadImg(src){
+                        imgEl.onload = function() {
+                            _self.imgWidth  = imgEl.width;
+                            _self.imgHeight = imgEl.height;
+
+                            _self.cordX = S.isNumber(_self.get("centerX"))?  _self.get("centerX") : 0.5 * _self.imgWidth; 
+                            _self.cordY = S.isNumber(_self.get("centerY"))?  _self.get("centerY") : 0.5 * _self.imgHeight; 
+                            if(_self.fatherPad.flashCanvasEnabled){
+                                setTimeout(function(){
+                                    _self.render.call(_self);   //flashCanvas下会有一些异步操作，直接渲染会出错，原因不详
+                                },100);    
+                            }else{
+                                 _self.render();
+                            }                                
+                        };
                         imgEl.src= src;
-
-                        _self.imgWidth  = imgEl.width;
-                        _self.imgHeight = imgEl.height;
-
-                        _self.cordX = S.isNumber(_self.get("centerX"))?  _self.get("centerX") : 0.5 * _self.imgWidth; 
-                        _self.cordY = S.isNumber(_self.get("centerY"))?  _self.get("centerY") : 0.5 * _self.imgHeight; 
-                        if(_self.fatherPad.flashCanvasEnabled){
-                            setTimeout(function(){
-                                _self.render.call(_self);   //flashCanvas下会有一些异步操作，直接渲染会出错，原因不详
-                            },100);    
-                        }else{
-                             _self.render();
-                        }
                     }
 
                     if(_self.fatherPad.flashCanvasEnabled){
