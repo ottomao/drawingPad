@@ -53,8 +53,8 @@
         </div>
         <div style="clear:both"> </div>
 
-        <!-- <input type="file" id="J_selectFile" /> -->
     </div>
+    <div id="dataResult"></textarea>
 
     <script type="text/javascript">
 
@@ -172,7 +172,7 @@
                 Node.one(".getData").on("click",function(){
                     var data = drawingPad.getMergedData(function(data){
                         S.log(data);
-
+                        Node.one("#dataResult").html(data);
                         if(S.UA.chrome){
                             window.open(data,"_blank");
                         }
